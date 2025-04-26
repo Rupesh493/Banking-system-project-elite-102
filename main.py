@@ -1,22 +1,26 @@
-def display_menu():
-    print("\nWelcome to Elite Bank!")
-    print("1. Login")
-    print("2. Create Account")
-    print("3. Exit")
+import mysql.connector
+def connect_to_database():
+    return mysql.connector.connect(
+         user='root',
+         password='Godblessyou@77',
+         database='banking_system'
+    )
+import mysql.connector
 
-def main():
-    while True:
-        display_menu()
-        choice = input("Enter your choice: ")
-        if choice == '1':
-            print("Login selected (not built yet)")
-        elif choice == '2':
-            print("Create Account selected (not built yet)")
-        elif choice == '3':
-            print("Goodbye!")
-            break
-        else:
-            print("Invalid choice, try again.")
+def register_account(name, pin, phone):
+    connection = connect_to_database()
+    cursor = connection.cursor()
 
-if __name__ == "__main__":
-    main()
+    query = """
+    INSERT INTO accounts (name, pin, phone, balance)
+    VALUES (%s, %s, %s, %s)
+    """
+    values = (name, pin, phone, 0.00)  # Starting balance is 0.00
+
+    cursor.execute(query, values)
+    connection.commit()
+
+    print("Account registered successfully!")
+
+    cursor.close()
+    connection.close()
